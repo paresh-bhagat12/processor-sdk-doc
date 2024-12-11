@@ -34,8 +34,8 @@ To set up and use the `buildroot-external-ti` external tree, follow these steps:
 
 .. code-block:: console
 
-    $ git clone -b 2024.05.1 https://github.com/buildroot/buildroot
-    $ git clone -b 10.00.07 https://github.com/TexasInstruments/buildroot-external-TI.git
+    $ git clone -b 2024.05.3 https://github.com/buildroot/buildroot
+    $ git clone -b 10.01.10.04 https://github.com/TexasInstruments/buildroot-external-TI.git
  
 2. Configure Buildroot to use the external tree and choose a configuration file
 
@@ -80,7 +80,7 @@ the necessary components and creates the root filesystem, kernel, and bootloader
 
 .. code-block:: console
 
-    $ make TI_K3_BOOT_FIRMWARE_VERSION=10.00.07
+    $ make TI_K3_BOOT_FIRMWARE_VERSION=10.01.10
 
 The build process can take some time, depending on your system's resources and
 the complexity of the configuration.
