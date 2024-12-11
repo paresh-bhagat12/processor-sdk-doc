@@ -194,7 +194,7 @@ on the EVM then power on the board, the following logs can be observed on the te
 
     .. code-block:: console
 
-        U-Boot SPL 2024.04-ti-g6301979bc99c (Jul 29 2024 - 09:10:51 +0000)
+        U-Boot SPL 2024.04-ti-g5d20b4ba8d54 (Dec 08 2024 - 04:51:09 +0000)
         SYSFW ABI: 4.0 (firmware rev 0x000a '10.0.8--v10.00.08 (Fiery Fox)')
         SPL initial stack usage: 13384 bytes
         Trying to boot from MMC2
@@ -223,7 +223,7 @@ on the EVM then power on the board, the following logs can be observed on the te
 
    .. code-block:: console
 
-        U-Boot SPL 2024.04-ti-g6301979bc99c (Jul 29 2024 - 09:10:51 +0000)
+        U-Boot SPL 2024.04-ti-g5d20b4ba8d54 (Dec 08 2024 - 04:51:09 +0000)
         SYSFW ABI: 4.0 (firmware rev 0x000a '10.0.8--v10.00.08 (Fiery Fox)')
         SPL initial stack usage: 13384 bytes
         Trying to boot from MMC2
@@ -380,7 +380,7 @@ Running Jailhouse Demos on |__PART_FAMILY_DEVICE_NAMES__|
 Host Setup
 ==========
 
-Flash tisdk-jailhouse-image-|__SDK_BUILD_MACHINE__|.wic.xz to SD card using balena
+Flash tisdk-jailhouse-image-|__SDK_BUILD_MACHINE__|.rootfs.wic.xz to SD card using balena
 and boot |__PART_FAMILY_DEVICE_NAMES__| from the SD card. As we will be running 
 two instances ,two terminals are required. Connect one terminal to the primary 
 UART (e.g. :file:`/dev/ttyUSB0`) and the other to the secondary UART (e.g. :file:`/dev/ttyUSB1`).
@@ -427,14 +427,14 @@ the demo are:
 
     .. code-block:: console
 
-        root@am62xx-evm: jailhouse cell load k3-am625-sk-linux-demo /usr/libexec/jailhouse/linux-loader.bin -a 0x0 -s "kernel=0xe0200000 dtb=0xe0000000" -a 0x1000 /boot/Image -a 0xe0200000 /boot/tisdk-jailhouse-inmate-am62xx-evm.rootfs.cpio -a 0xe28d4000 /usr/share/jailhouse/inmate-k3-am625-sk.dtb -a 0xe0000000
+        root@am62xx-evm: jailhouse cell load k3-am625-sk-linux-demo /usr/libexec/jailhouse/linux-loader.bin -a 0x0 -s "kernel=0xe0200000 dtb=0xe0000000" -a 0x1000 /boot/Image -a 0xe0200000 /boot/tisdk-jailhouse-inmate-am62xx-evm.rootfs.cpio -a 0xe2a5e000 /usr/share/jailhouse/inmate-k3-am625-sk.dtb -a 0xe0000000
 
     linux-loader.bin is a small application provided and built by Jailhouse source
     tree to run inmates. As you can see (-a 0x0) it is loaded to virtual address 0x0.
     "-s "kernel=0xe0200000 dtb=0xe0000000" -a 0x1000" - is the linux_loader argument
     loaded as string to virtual address 0x1000, which instructs the linux-loader to
     branch to the those addresses. Kernel Image is loaded to the virtual address
-    0xe0200000, jailhouse inmate ramfs to 0xe28d4000 and device tree for inmate to 0xe0000000.
+    0xe0200000, jailhouse inmate ramfs to 0xe2a5e000 and device tree for inmate to 0xe0000000.
 
 .. ifconfig:: CONFIG_part_variant in ('AM62PX')
 
@@ -443,11 +443,11 @@ the demo are:
     "-s "kernel=0x9e0200000 dtb=0x9e0000000" -a 0x1000" - is the linux_loader argument
     loaded as string to virtual address 0x1000, which instructs the linux-loader to
     branch to the those addresses. Kernel Image is loaded to the virtual address
-    0x9e0200000, jailhouse inmate ramfs to 0x9e28d4000 and device tree for inmate to 0x9e0000000.
+    0x9e0200000, jailhouse inmate ramfs to 0x9e2a5e000 and device tree for inmate to 0x9e0000000.
 
     .. code-block:: console
 
-        root@am62pxx-evm: jailhouse cell load k3-am62p5-sk-linux-demo /usr/libexec/jailhouse/linux-loader.bin -a 0x0 -s "kernel=0x9e0200000 dtb=0x9e0000000" -a 0x1000 /boot/Image -a 0x9e0200000 /boot/tisdk-jailhouse-inmate-am62pxx-evm.rootfs.cpio -a 0x9e28d4000 /usr/share/jailhouse/inmate-k3-am62p5-sk.dtb -a 0x9e0000000
+        root@am62pxx-evm: jailhouse cell load k3-am62p5-sk-linux-demo /usr/libexec/jailhouse/linux-loader.bin -a 0x0 -s "kernel=0x9e0200000 dtb=0x9e0000000" -a 0x1000 /boot/Image -a 0x9e0200000 /boot/tisdk-jailhouse-inmate-am62pxx-evm.rootfs.cpio -a 0x9e2a5e000 /usr/share/jailhouse/inmate-k3-am62p5-sk.dtb -a 0x9e0000000
 
 -  Start inmate cell
 
