@@ -19,7 +19,7 @@ There are several opensource tools available for generating the RootFS in a chro
 
 In other words, ``ti-bdebstrap`` offers users an easy way to create a full-fledged Debian image for supported TI platforms, using a single command. Once the image is built, the user can directly flash it onto a SD card.
 
-TI currently supports building Debian Bookworm Images for AM62Px, AM62x and AM64x platforms.
+TI currently supports building Debian images for AM62Lx, AM62Px, AM62x and AM64x platforms.
 
 Usage
 =====
@@ -41,30 +41,30 @@ Repository Structure
 
 .. code-block::
 
-    ti-bdebstrap
+    tibdebstrap/
     ├── build.sh
     ├── builds.toml
     ├── configs
-    │   ├── bdebstrap_configs
-    │   │   ├── bookworm
-    │   │   │   ├── bookworm-<machine>.yaml
-    │   │   │   └── bookworm-rt-<machine>.yaml
-    │   │   └── trixie
-    │   │       ├── trixie-<machine>.yaml
-    │   │       └── trixie-rt-<machine>.yaml
-    │   ├── bsp_sources.toml
-    │   └── machines --> Machine configurations for each BSP version
-    │       ├── 09.02.00.010.toml
-    │       └── 10.01.10.04.toml
+    │   ├── bdebstrap_configs
+    │   │   ├── bookworm
+    │   │   │   ├── bookworm-<machine>.yaml
+    │   │   │   └── bookworm-rt-<machine>.yaml
+    │   │   └── trixie
+    │   │       ├── trixie-<machine>.yaml
+    │   │       └── trixie-rt-<machine>.yaml
+    │   ├── bsp_sources.toml
+    │   └── machines
+    │       ├── 09.02.00.010.toml
+    │       └── 11.00.05.02.toml
     ├── create-sdcard.sh
     ├── create-wic.sh
     ├── LICENSE
     ├── README.md
     ├── scripts
-    │   ├── build_bsp.sh
-    │   ├── build_distro.sh
-    │   ├── common.sh
-    │   └── setup.sh
+    │   ├── build_bsp.sh
+    │   ├── build_distro.sh
+    │   ├── common.sh
+    │   └── setup.sh
     └── target --> Custom files to deploy in target.
 
 ``build.sh``: the "main" script that the user should run to generate Debian images.

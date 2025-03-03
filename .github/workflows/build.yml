@@ -57,6 +57,8 @@ jobs:
             device: AM62PX
           - os: debian
             device: AM64X
+          - os: debian
+            device: AM62LX
 
     steps:
       - name: Checkout

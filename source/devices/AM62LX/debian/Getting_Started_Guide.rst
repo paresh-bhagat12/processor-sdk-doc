@@ -4,7 +4,7 @@
 Getting Started with Debian
 ***************************
 
-The SD card Image tisdk-debian-trixie-<machine> provided on the |__SDK_DOWNLOAD_URL__| is all you need to get started and explore Debian on TI microprocessors.
+The SD card Image tisdk-debian-trixie-<machine>-<version>.wic.xz provided on the |__SDK_DOWNLOAD_URL__| is all you need to get started and explore Debian on TI microprocessors.
 
 The Debian Image provided has all the basic packages required to boot with weston as default window manager. The user can install any new package using inbuilt 'apt' utility
 and customize the filesystem as required.
@@ -53,13 +53,13 @@ Set the EVM to SD card Boot mode
 --------------------------------
 The simplest way to run Linux on the EVM is through an SD card. For that, the EVM will need to be configured for SD card boot. Refer to `AM62L EVM User's Guide <https://www.ti.com/tool/EVM-AM62L>`__ for detailed information about boot mode configurations. For quick reference, the figure below shows the boot mode switch setting for SD card boot.
 
-.. Image:: /images/AM62x_SD_boot.jpg
+.. Image:: /images/AM62LX_SD_boot.jpg
 
 Boot and Validate Debian
 ------------------------
 Make sure to connect the Ethernet cable, HDMI Display, Mouse and Keyboard to the EVM. Insert the SD Card in the board and Power ON the EVM.
 
-After a few seconds the booting prompt will appear. After boot the weston homesreen will appear.
+After a few seconds, the boot prompt will appear. After boot, the weston homescreen will appear.
 
 .. Image:: /images/debian_homescreen.png
 
@@ -72,13 +72,13 @@ Also export ``http_proxy``, ``https_proxy``, ``ftp_proxy`` and ``no_proxy`` with
 
 Do an ``apt update`` to make sure that the proxy is properly set and apt recognizes it. The sample output of the command is as shown below:.
 
-.. Image:: /images/debian_apt_update.png
+.. Image:: /images/debian_am62l_apt_update.png
 
 To install any package available on Debian Standard Package Archive and TI Package Archive use ``apt install``.
 
 As an example to install and run ``fortune`` package.
 
-.. Image:: /images/debian_apt_install.png
+.. Image:: /images/debian_am62l_apt_install.png
 
 More packages can be installed at runtime following the instructions provided to help with the development work flow.
 
