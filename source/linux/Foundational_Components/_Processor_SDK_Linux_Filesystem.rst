@@ -32,7 +32,7 @@ There are different filesystem tarballs provided in the SDK. You'll find them at
 
 This is the complete filesystem image, that contains standard Linux
 commands and features. This also contains the TI component libraries,
-binaries and :ref:`TI Apps Launcher OOB Demo <TI-Apps-Launcher-User-Guide-label>`
+binaries and :ref:`OOB Demos <oob-demo-applications>`
 
 .. only:: _comment
 
