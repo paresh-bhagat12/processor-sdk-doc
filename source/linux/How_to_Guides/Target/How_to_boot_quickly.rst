@@ -317,7 +317,6 @@ In order to package the filesystem as initramfs into the kernel, follow these st
         $ cd output
         $ cpio -idv < tisdk-tiny-initramfs-am62xx-evm.cpio
 
-
 2. Edit the kernel config:
 
     .config:
@@ -335,7 +334,13 @@ In order to package the filesystem as initramfs into the kernel, follow these st
         General setup ->
             Initial RAM filesystem and RAM disk (initramfs/initrd) support ->
                 Initramfs source file(s)
-                    /path/to/filesystem
+                    /path/to/filesystem or cpio file
+
+    Both cpio or filesystem path can be passed to "Initramfs source file". If providing a filesystem path directly, ensure required files and folders are executable. Or make all files executable by running below command:
+
+        .. code-block:: console
+
+            host$ chmod -R +x /path/to/filesystem
 
 3. Rebuild the kernel
 
@@ -369,6 +374,15 @@ The time taken to boot filesystem is measured from Process ID 1(PID1) to login p
         host$ mknod -m 0600 null c 1 3
 
     This removes 52ms from the boot up time.
+
+- Convert file system to cpio file.
+
+    .. code-block:: console
+
+       host$ cd <filesystem>
+       host$ find . | sort | cpio --reproducible -o -H newc -R root:root > ../tisdk-tiny-initramfs-new.cpio
+
+    Pass the new cpio file during kernel build.
 
 Measurements
 ------------
@@ -630,51 +644,85 @@ Bootloader loads HSM binary (9KB), MCU/DSP image (50KB) and Kernel+FS image (22M
 
    Filesytem time is measured using minicom time stamp. ( Boot Time via minicom - Kernel time by GPIO = Filesystem Time )
 
-Additional notes
-----------------
+Additional Steps to Test Early Display
+--------------------------------------
 
 .. ifconfig:: CONFIG_part_variant in ('AM62X', 'AM62PX')
 
     .. note::
 
         Ensure that you are not affecting your host computer when making the changes detailed below.
-        For early display with OLDI panel, disable bridge-hdmi or sii9022 node in device tree.
-        Also use fdtoverlay command to modify dtb file (base tree) with dtbo overlay for OLDI panel.
 
-    - This statically compiled :download:`modetest </files/modetest>` can be added to the filesystem to test out display at boot on an OLDI panel.
+    - For early display with OLDI panel, disable bridge-hdmi or sii9022 node in device tree.
 
-        - `init` is a symbolic link to /sbin/init. Remove the file sbin/init
+        .. code-block:: file
 
-            .. code-block:: console
+           diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+           index e40abe7afe45..70153e592600 100644
+           --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+           +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
+           @@ -589,6 +589,7 @@ sii9022: bridge-hdmi@3b {
+                           interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+                           #sound-dai-cells = <0>;
+                           sil,i2s-data-lanes = < 0 >;
+           +               status = "disabled";
 
-                rm <filesystem>/sbin/init
+    - Also use fdtoverlay command to modify dtb file (base tree) with dtbo overlay for OLDI panel.
 
-        - Create a new sbin/init and add the following.
+        .. code-block:: console
 
-             .. code-block:: sh
+           host$ fdtoverlay -v -i k3-am62p5-sk.dtb -o merged.dtb k3-am62p5-sk-microtips-mf101hie-panel.dtbo
 
-                #!/bin/sh
+        Later rename merged.dtb to k3-am62p5-sk.dtb when generating linux.falcon.appimage.hs_fs.
 
-                mount -t proc none /proc
-                mount -t sysfs none /sys
-                mount -t devtmpfs  dev  /dev
+    - Add statically compiled :download:`modetest </files/modetest>` to filesystem to test out display at boot on an OLDI panel.
 
-                # Run modetest in the background
-                # 40 - connector ID
-                # 38 - CRTC ID
-                # 1920x1200 - resolution of panel
-                (modetest -M tidss -s 40@38:1920x1200 0<&- 2>/tmp/output.log) &
+        .. code-block:: console
 
-                exec /sbin/init.sysvinit $*
+           host$ cd <filesystem>
+           host$ cp ~/Downloads/modetest <filesystem>/usr/bin
+           host$ chmod +x modetest
 
-            You can get the connector ID and CRTC ID of your OLDI panel by running :code:`kmsprint` or :code:`modetest -M tidss`
+    - `init` is a symbolic link to /sbin/init. Remove the file sbin/init
 
-        - Make it executable
+        .. code-block:: console
 
-            .. code-block:: console
+           host$ rm <filesystem>/sbin/init
 
-                chmod +x <filesystem>/sbin/init
+    - Create a new sbin/init and add the following.
 
+        .. code-block:: sh
+
+           #!/bin/sh
+
+           mount -t proc none /proc
+           mount -t sysfs none /sys
+           mount -t devtmpfs  dev  /dev
+
+           # Run modetest in the background
+           # 40 - connector ID
+           # 38 - CRTC ID
+           # 1920x1200 - resolution of panel
+           (modetest -M tidss -s 40@38:1920x1200 0<&- 2>/tmp/output.log) &
+
+           exec /sbin/init.sysvinit $*
+
+           You can get the connector ID and CRTC ID of your OLDI panel by running :code:`kmsprint` or :code:`modetest -M tidss`
+
+    - Make it executable
+
+        .. code-block:: console
+
+           $ chmod +x <filesystem>/sbin/init
+
+    - Convert file system to cpio file.
+
+        .. code-block:: console
+
+           host$ cd <filesystem>
+           host$ find . | sort | cpio --reproducible -o -H newc -R root:root > ../tisdk-tiny-initramfs-new.cpio
+
+        Pass the new cpio file during kernel build.
 
 .. ifconfig:: CONFIG_part_variant in ('AM62AX')
 
